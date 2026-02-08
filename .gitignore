@@ -1,0 +1,84 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.ENV
+.venv/
+.ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.DS_Store
+.hypothesis/
+
+# FastAPI/Backend
+*.env
+*.env.local
+*.env.dev
+*.env.test
+*.env.prod
+.env.defaults
+.env.backup
+.venv/
+
+# UV (Python package manager)
+uv.lock
+*.lock
+
+# Node.js/Next.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.electron/
+.release/
+.nyc_output/
+
+# Environment variables
+.env*
+!.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.db.*
+
+# Logs
+logs
+*.log
+
+# Runtime
+runtime/
+
+# Build outputs
+dist/
+build/
+target/
