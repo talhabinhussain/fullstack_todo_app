@@ -1,36 +1,34 @@
-# Use Python 3.11 slim image as base
 FROM python:3.11-slim
 
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Set work directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client \
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY ./pyproject.toml /app/
-RUN pip install uv && uv pip install -r pyproject.toml
+# Install uv
+RUN pip install --no-cache-dir uv
 
-# Copy project
-COPY . /app/
+# Copy dependency files first (better caching)
+COPY pyproject.toml uv.lock* ./
 
-# Collect static files
-RUN python -m compileall /app
+# Install dependencies
+RUN uv sync --frozen
+
+# Copy app code
+COPY . .
 
 # Create non-root user
-RUN adduser --disabled-password --gecos '' appuser
-RUN chown -R appuser:appuser /app
+RUN adduser --disabled-password --gecos '' appuser \
+    && chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
+# Expose default port (informational)
 EXPOSE 8000
 
-# Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run app (PORT injected by host)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
