@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/components/AuthContextProvider";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
@@ -71,7 +72,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
           <Link href="/" className="text-xl font-bold">
             Todo App
           </Link>
