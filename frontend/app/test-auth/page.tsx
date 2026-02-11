@@ -1,28 +1,26 @@
 'use client';
 
-import { useAuth } from 'better-auth-react';
+import { useAuth } from '@/components/AuthContextProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function TestAuthPage() {
-  const { signIn, signOut, session, isPending } = useAuth();
+  const { login, logout, user, token, loading } = useAuth();
 
   const handleSignIn = async () => {
-    // For testing, we'll simulate a sign in
-    // In a real app, this would use proper credentials
+    // For testing, we'll simulate a sign in with test credentials
     try {
-      await signIn('credentials', {
-        email: 'test@example.com',
-        password: 'password123',
-        redirectTo: '/dashboard',
-      });
+      const result = await login('test@example.com', 'password123');
+      if (!result.success) {
+        console.error('Sign in failed:', result.error);
+      }
     } catch (error) {
       console.error('Sign in failed:', error);
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut();
+  const handleSignOut = () => {
+    logout();
   };
 
   return (
@@ -37,11 +35,11 @@ export default function TestAuthPage() {
             <div className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-md">
                 <h3 className="font-medium">Session Status:</h3>
-                <p>Status: {isPending ? 'Loading...' : session ? 'Authenticated' : 'Not authenticated'}</p>
-                {session && (
+                <p>Status: {loading ? 'Loading...' : token ? 'Authenticated' : 'Not authenticated'}</p>
+                {user && (
                   <>
-                    <p>Email: {session.user?.email}</p>
-                    <p>User ID: {session.user?.id}</p>
+                    <p>Email: {user.email}</p>
+                    <p>User ID: {user.id}</p>
                   </>
                 )}
               </div>
@@ -49,17 +47,17 @@ export default function TestAuthPage() {
               <div className="flex space-x-4">
                 <Button
                   onClick={handleSignIn}
-                  disabled={!!session}
+                  disabled={!!token}
                 >
-                  {session ? 'Already Signed In' : 'Test Sign In'}
+                  {token ? 'Already Signed In' : 'Test Sign In'}
                 </Button>
 
                 <Button
                   onClick={handleSignOut}
                   variant="outline"
-                  disabled={!session}
+                  disabled={!token}
                 >
-                  {session ? 'Sign Out' : 'Not Signed In'}
+                  {token ? 'Sign Out' : 'Not Signed In'}
                 </Button>
               </div>
 

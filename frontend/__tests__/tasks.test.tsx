@@ -3,12 +3,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TasksPage from '../app/tasks/page';
 
-// Mock the better-auth-react hooks
-vi.mock('better-auth-react', () => ({
+// Mock the AuthContextProvider hooks
+vi.mock('@/components/AuthContextProvider', () => ({
   useAuth: () => ({
-    session: {
-      user: { id: 'test-user-id', email: 'test@example.com' },
-    },
+    user: { id: 'test-user-id', email: 'test@example.com' },
+    token: 'test-token',
+    loading: false,
   }),
 }));
 

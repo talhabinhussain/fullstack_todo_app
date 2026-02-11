@@ -3,12 +3,13 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import LoginPage from '../app/login/page';
 
-// Mock the better-auth-react hooks
-vi.mock('better-auth-react', () => ({
+// Mock the AuthContextProvider hooks
+vi.mock('@/components/AuthContextProvider', () => ({
   useAuth: () => ({
-    signIn: vi.fn(),
-    session: null,
-    isPending: false,
+    login: vi.fn(),
+    user: null,
+    token: null,
+    loading: false,
   }),
 }));
 
@@ -39,13 +40,14 @@ describe('Authentication Flow', () => {
   });
 
   it('shows error message for invalid credentials', async () => {
-    // Mock the signIn function to return an error
-    const mockSignIn = vi.fn().mockResolvedValue({ error: 'Invalid credentials' });
-    vi.mock('better-auth-react', () => ({
+    // Mock the login function to return an error
+    const mockLogin = vi.fn().mockResolvedValue({ error: 'Invalid credentials' });
+    vi.mock('@/components/AuthContextProvider', () => ({
       useAuth: () => ({
-        signIn: mockSignIn,
-        session: null,
-        isPending: false,
+        login: mockLogin,
+        user: null,
+        token: null,
+        loading: false,
       }),
     }));
 
