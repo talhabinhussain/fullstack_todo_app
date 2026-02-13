@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,19 +9,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { headers } from "next/headers";
+import { useAuth } from "@/components/AuthContextProvider";
 import { CheckCircle2, Shield, Zap } from "lucide-react";
+import { useEffect, useState } from "react";
 
-export default async function HomePage() {
-  let isAuthenticated = false;
-  try {
-    const headersList = headers();
-    const cookies = headersList.get("cookie");
-    if (cookies && cookies.includes("auth-token")) {
-      isAuthenticated = true;
-    }
-  } catch (error) {
-    console.error("Error checking auth status:", error);
+export default function HomePage() {
+  const { user, loading } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Set authentication status based on user context
+    setIsAuthenticated(!!user);
+  }, [user]);
+
+  // Show loading state while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
