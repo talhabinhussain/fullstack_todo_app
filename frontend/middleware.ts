@@ -82,7 +82,17 @@ export async function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
-// Apply middleware to specific paths
+// Apply middleware to specific paths - only for frontend routes, not external API calls
 export const config = {
-  matcher: ['/dashboard/:path*', '/api/:path*', '/login', '/signup']
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (these should go to your external backend)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - static (static assets)
+     */
+    '/((?!api\\/|_next\\/|static\\/|favicon\\.ico|.*\\..*).*)',
+  ]
 };
