@@ -64,8 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const apiUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-      const response = await fetch(`${apiUrl}/auth/login`, {
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,10 +110,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const apiUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api";
-      console.log("Registering user at:", `${apiUrl}/auth/register`);
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      console.log("Registering user at:", `${apiUrl}/api/auth/register`);
 
-      const response = await fetch(`${apiUrl}/auth/register`, {
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
