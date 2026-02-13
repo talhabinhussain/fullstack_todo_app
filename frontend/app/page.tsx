@@ -15,7 +15,7 @@ export default async function HomePage() {
   try {
     const headersList = headers();
     const cookies = headersList.get("cookie");
-    if (cookies && cookies.includes("better-auth.session_token")) {
+    if (cookies && cookies.includes("auth-token")) {
       isAuthenticated = true;
     }
   } catch (error) {

@@ -3,7 +3,7 @@ import { useAuth } from '@/components/AuthContextProvider';
 import { taskApi } from '@/lib/api-client';
 import { TokenManager } from '@/utils/token-manager';
 
-interface Task {
+export interface Task {
   id: string;
   user_id: string;
   title: string;
@@ -11,6 +11,8 @@ interface Task {
   is_completed: boolean;
   created_at: string;
   updated_at: string;
+  priority?: "low" | "medium" | "high";
+  due_date?: string;
 }
 
 interface UseTasksReturn {
@@ -18,7 +20,7 @@ interface UseTasksReturn {
   loading: boolean;
   error: string | null;
   fetchTasks: () => Promise<void>;
-  createTask: (title: string, description?: string) => Promise<void>;
+  createTask: (title: string, description?: string, priority?: "low" | "medium" | "high", due_date?: string) => Promise<void>;
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   toggleTaskCompletion: (id: string) => Promise<void>;
@@ -69,7 +71,7 @@ export const useTasks = (): UseTasksReturn => {
     }
   };
 
-  const createTask = async (title: string, description?: string) => {
+  const createTask = async (title: string, description?: string, priority?: "low" | "medium" | "high", due_date?: string) => {
     console.log('Creating task with userId:', userId); // Debug log
     if (!userId) {
       setError('User not authenticated');
@@ -94,8 +96,8 @@ export const useTasks = (): UseTasksReturn => {
       }
 
       console.log('Calling taskApi.createTask with userId:', userId); // Debug log
-      // Call the backend API
-      const response = await taskApi.createTask(userId, { title, description });
+      // Call the backend API with additional parameters
+      const response = await taskApi.createTask(userId, { title, description, priority, due_date });
       console.log('Task created successfully:', response.data); // Debug log
       setTasks(prev => [response.data, ...prev]);
     } catch (err) {

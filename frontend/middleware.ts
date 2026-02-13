@@ -57,11 +57,10 @@ export async function middleware(req: NextRequest) {
 
   // For frontend routes, check session
   if (isProtectedPath) {
-    // This is a simplified approach - in a real app with Better Auth,
-    // you'd need to verify the session properly
-    const sessionCookie = req.cookies.get('better-auth.session_token'); // Default cookie name for Better Auth
+    // Check for our custom auth token
+    const authToken = req.cookies.get('auth-token');
 
-    if (!sessionCookie) {
+    if (!authToken) {
       // Redirect to login if no session exists
       const url = req.nextUrl.clone();
       url.pathname = '/login';
@@ -72,8 +71,8 @@ export async function middleware(req: NextRequest) {
 
   // If user is on auth page but already logged in, redirect to dashboard
   if (isAuthPath) {
-    const sessionCookie = req.cookies.get('better-auth.session_token');
-    if (sessionCookie) {
+    const authToken = req.cookies.get('auth-token');
+    if (authToken) {
       const url = req.nextUrl.clone();
       url.pathname = '/dashboard';
       return NextResponse.redirect(url);
