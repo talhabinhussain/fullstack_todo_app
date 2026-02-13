@@ -19,11 +19,11 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://127.0.0.1:3000",
-        "https://fullstack-todo-app-orpin.vercel.app",  # Your previous deployed frontend
-        "https://fullstack-todo-app-git-main-talha67483s-projects.vercel.app",  # Your current deployed frontend
-        "http://localhost:3001",  # Additional common ports for Next.js apps
+        "http://localhost:3001",
         "http://localhost:3002",
-        "https://*.vercel.app"  # Allow all Vercel deployments from the same project
+        "https://*.vercel.app",  # Allow all Vercel deployments
+        "https://*.railway.app",  # Allow Railway deployments if needed
+        "https://vercel.app"  # Additional Vercel pattern
     ],
     allow_credentials=True,
     allow_methods=["*"],

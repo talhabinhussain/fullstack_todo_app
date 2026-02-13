@@ -3,7 +3,7 @@ import { TokenManager } from '@/utils/token-manager';
 
 // Create an axios instance
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api',
+  baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}/api`,
 });
 
 // Add request interceptor to include auth token
@@ -42,16 +42,16 @@ export default apiClient;
 // Specific API functions for tasks
 export const taskApi = {
   getTasks: (userId: string) => {
-    return apiClient.get(`/api/${userId}/tasks`);
+    return apiClient.get(`/${userId}/tasks`);
   },
   createTask: (userId: string, taskData: { title: string; description?: string; priority?: "low" | "medium" | "high"; due_date?: string }) => {
-    return apiClient.post(`/api/${userId}/tasks`, taskData);
+    return apiClient.post(`/${userId}/tasks`, taskData);
   },
   updateTask: (userId: string, taskId: string, taskData: { title?: string; description?: string; is_completed?: boolean; priority?: "low" | "medium" | "high"; due_date?: string }) => {
-    return apiClient.put(`/api/${userId}/tasks/${taskId}`, taskData);
+    return apiClient.put(`/${userId}/tasks/${taskId}`, taskData);
   },
   deleteTask: (userId: string, taskId: string) => {
-    return apiClient.delete(`/api/${userId}/tasks/${taskId}`);
+    return apiClient.delete(`/${userId}/tasks/${taskId}`);
   }
 };
 
