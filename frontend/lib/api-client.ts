@@ -44,10 +44,10 @@ export const taskApi = {
   getTasks: (userId: string) => {
     return apiClient.get(`/api/${userId}/tasks`);
   },
-  createTask: (userId: string, taskData: { title: string; description?: string }) => {
+  createTask: (userId: string, taskData: { title: string; description?: string; priority?: "low" | "medium" | "high"; due_date?: string }) => {
     return apiClient.post(`/api/${userId}/tasks`, taskData);
   },
-  updateTask: (userId: string, taskId: string, taskData: { title?: string; description?: string; is_completed?: boolean }) => {
+  updateTask: (userId: string, taskId: string, taskData: { title?: string; description?: string; is_completed?: boolean; priority?: "low" | "medium" | "high"; due_date?: string }) => {
     return apiClient.put(`/api/${userId}/tasks/${taskId}`, taskData);
   },
   deleteTask: (userId: string, taskId: string) => {

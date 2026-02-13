@@ -21,7 +21,7 @@ interface UseTasksReturn {
   error: string | null;
   fetchTasks: () => Promise<void>;
   createTask: (title: string, description?: string, priority?: "low" | "medium" | "high", due_date?: string) => Promise<void>;
-  updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'user_id' | 'created_at' | 'updated_at'>>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   toggleTaskCompletion: (id: string) => Promise<void>;
 }
