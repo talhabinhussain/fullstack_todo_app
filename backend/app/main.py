@@ -13,10 +13,17 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Todo API", version="1.0.0")
 
-# Add CORS middleware to allow frontend requests from port 3000
+# Add CORS middleware to allow frontend requests from local dev and deployed environments
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://fullstack-todo-app-orpin.vercel.app",  # Your actual deployed frontend
+        "http://localhost:3001",  # Additional common ports for Next.js apps
+        "http://localhost:3002",
+        "https://*.vercel.app"  # Allow all Vercel deployments from the same project
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
