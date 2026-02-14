@@ -6,6 +6,10 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './lib/**/*.{ts,tsx}',
+    './hooks/**/*.{ts,tsx}',
+    './utils/**/*.{ts,tsx}',
+    './types/**/*.{ts,tsx}',
   ],
   theme: {
   	container: {

@@ -4,6 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+import os
 from .routers import tasks, users
 from .database import create_tables
 
@@ -13,18 +14,33 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Todo API", version="1.0.0")
 
-# Add CORS middleware to allow frontend requests from local dev and deployed environments
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
+# Configure allowed origins based on environment
+if os.getenv("ENVIRONMENT") == "production":
+    # Production environment - only allow specific origins
+    allowed_origins = [
+        "https://*.vercel.app",  # Allow all Vercel deployments
+        "https://vercel.app",  # Additional Vercel pattern
+    ]
+    # Add specific frontend URL from environment variable if provided
+    FRONTEND_URL = os.getenv("FRONTEND_URL")
+    if FRONTEND_URL:
+        allowed_origins.append(FRONTEND_URL)
+else:
+    # Development environment - allow common dev origins
+    allowed_origins = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:3001",
         "http://localhost:3002",
         "https://*.vercel.app",  # Allow all Vercel deployments
         "https://*.railway.app",  # Allow Railway deployments if needed
-        "https://vercel.app"  # Additional Vercel pattern
-    ],
+        "https://vercel.app",  # Additional Vercel pattern
+    ]
+
+# Add CORS middleware to allow frontend requests from local dev and deployed environments
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
