@@ -12,7 +12,7 @@ SECRET_KEY=your_jwt_secret_key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=1440
 ENVIRONMENT=production
-FRONTEND_URL=https://your-frontend-url.vercel.app  # Replace with your actual frontend URL
+FRONTEND_URL=https://fullstack-todo-app-orpin.vercel.app  # Your deployed frontend URL
 ```
 
 ### Deployment Steps:
@@ -45,7 +45,13 @@ NEXT_PUBLIC_API_BASE_URL=https://your-backend-railway-url.up.railway.app  # Repl
 ## Troubleshooting:
 
 If you encounter "Network error" or CORS issues:
-1. Verify that the `FRONTEND_URL` in your backend matches your deployed frontend URL
+1. Verify that the `FRONTEND_URL` in your backend matches your deployed frontend URL (https://fullstack-todo-app-orpin.vercel.app)
 2. Verify that the `NEXT_PUBLIC_API_BASE_URL` in your frontend points to your deployed backend
 3. Check that both applications are properly deployed and accessible
 4. Ensure that your Neon database connection is working properly in the deployed backend
+5. Check the backend logs on Railway for any error messages
+6. You can visit `/debug/cors` endpoint on your backend to see the current CORS configuration
+
+## Debugging Endpoint:
+
+The backend includes a debug endpoint at `/debug/cors` that shows the current CORS configuration. Visit `YOUR_BACKEND_URL/debug/cors` to see the current settings.

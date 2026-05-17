@@ -1,7 +1,9 @@
-from sqlmodel import create_engine, Session, SQLModel
-from typing import Generator
 import os
+from typing import Generator
+
 from dotenv import load_dotenv
+from sqlalchemy.pool import NullPool
+from sqlmodel import SQLModel, Session, create_engine
 
 # Import models to ensure they're registered with SQLModel
 from .models.user import User
@@ -9,25 +11,45 @@ from .models.task import Task
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "")  # Get the environment variable
 
-# If DATABASE_URL is not set or is empty, default to SQLite
-if not DATABASE_URL:
-    DATABASE_URL = "sqlite:///./todo_app.db"
+def _normalize_database_url() -> str:
+    database_url = os.getenv("DATABASE_URL", "").strip()
+    if not database_url:
+        return "sqlite:///./todo_app.db"
 
-if "postgresql+psycopg" in DATABASE_URL:
-    # psycopg3 driver with SSL
-    engine = create_engine(DATABASE_URL, echo=True, connect_args={"sslmode": "require"})
-elif DATABASE_URL.startswith("postgresql"):
-    # Convert standard PostgreSQL URLs to use psycopg3 driver
-    # This handles cases where DATABASE_URL is like 'postgresql://...' instead of 'postgresql+psycopg://...'
-    if not "postgresql+psycopg://" in DATABASE_URL:
-        # Replace 'postgresql://' with 'postgresql+psycopg://' to ensure correct driver usage
-        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
-    engine = create_engine(DATABASE_URL, echo=True, connect_args={"sslmode": "require"})
-else:
-    # For SQLite or other databases
-    engine = create_engine(DATABASE_URL, echo=True)
+    # SQLAlchemy + psycopg3 expects the explicit driver name.
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
+    return database_url
+
+
+def _build_engine():
+    database_url = _normalize_database_url()
+    echo_sql = os.getenv("ENVIRONMENT", "development") != "production"
+
+    if database_url.startswith("postgresql+psycopg://"):
+        # Neon on serverless platforms can close idle pooled connections.
+        # NullPool opens a fresh connection per request and avoids stale SSL sessions.
+        return create_engine(
+            database_url,
+            echo=echo_sql,
+            connect_args={
+                "sslmode": "require",
+                "connect_timeout": 30,
+                "keepalives": 1,
+                "keepalives_idle": 30,
+                "keepalives_interval": 10,
+                "keepalives_count": 5,
+            },
+            poolclass=NullPool,
+            pool_pre_ping=True,
+        )
+
+    return create_engine(database_url, echo=echo_sql)
+
+
+engine = _build_engine()
 
 
 def create_tables():

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://todo-backend-production-5362.up.railway.app',
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://talha288-todo-fastapi-backend.hf.space',
   },
   images: {
     domains: ['localhost', '127.0.0.1'],

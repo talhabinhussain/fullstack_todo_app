@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (storedToken && storedUser) {
       setToken(storedToken);
       const parsedUser = JSON.parse(storedUser);
-      
+
       // Ensure the user object has an ID property
       if (!parsedUser.id) {
         // If no ID in stored user, decode from token
@@ -64,7 +64,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const apiUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        "https://talha288-todo-fastapi-backend.hf.space";
       const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: "POST",
         headers: {
@@ -78,16 +79,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Decode the token to get the user ID from the JWT payload
         const tokenPayload = TokenManager.decodeToken(data.access_token);
         if (!tokenPayload || !tokenPayload.sub) {
-          console.error('Could not extract user ID from token');
-          return { success: false, error: "Authentication error: Could not extract user ID" };
+          console.error("Could not extract user ID from token");
+          return {
+            success: false,
+            error: "Authentication error: Could not extract user ID",
+          };
         }
         const userId = tokenPayload.sub; // 'sub' field contains the user ID
-        
-        console.log('Setting user with ID:', userId); // Debug log
+
+        console.log("Setting user with ID:", userId); // Debug log
         setToken(data.access_token);
         setUser({ id: userId, email });
         TokenManager.storeTokens(data.access_token);
-        localStorage.setItem("auth-user", JSON.stringify({ id: userId, email }));
+        localStorage.setItem(
+          "auth-user",
+          JSON.stringify({ id: userId, email }),
+        );
         return { success: true };
       }
 
@@ -110,7 +117,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   ): Promise<{ success: boolean; error?: string }> => {
     try {
       const apiUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        "https://talha288-todo-fastapi-backend.hf.space";
       console.log("Registering user at:", `${apiUrl}/api/auth/register`);
 
       const response = await fetch(`${apiUrl}/api/auth/register`, {
@@ -126,16 +134,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Decode the token to get the user ID from the JWT payload
         const tokenPayload = TokenManager.decodeToken(data.access_token);
         if (!tokenPayload || !tokenPayload.sub) {
-          console.error('Could not extract user ID from token');
-          return { success: false, error: "Authentication error: Could not extract user ID" };
+          console.error("Could not extract user ID from token");
+          return {
+            success: false,
+            error: "Authentication error: Could not extract user ID",
+          };
         }
         const userId = tokenPayload.sub; // 'sub' field contains the user ID
-        
-        console.log('Setting user with ID:', userId); // Debug log
+
+        console.log("Setting user with ID:", userId); // Debug log
         setToken(data.access_token);
         setUser({ id: userId, email });
         TokenManager.storeTokens(data.access_token);
-        localStorage.setItem("auth-user", JSON.stringify({ id: userId, email }));
+        localStorage.setItem(
+          "auth-user",
+          JSON.stringify({ id: userId, email }),
+        );
         return { success: true };
       }
 
