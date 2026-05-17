@@ -100,9 +100,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Extract error message from backend
       try {
-        const errorData = await response.json();
-        return { success: false, error: errorData.detail || "Login failed" };
-      } catch {
+        const errorText = await response.text();
+        console.error(`Login failed with status ${response.status}. Response:`, errorText.substring(0, 200));
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          return { success: false, error: errorData.detail || "Login failed" };
+        } catch {
+          return { success: false, error: `Error ${response.status}: Login failed. Check console for details.` };
+        }
+      } catch (parseError) {
+        console.error("Failed to read error response:", parseError);
         return { success: false, error: "Login failed. Please try again." };
       }
     } catch (error) {
@@ -155,17 +163,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Extract error message from backend
       try {
-        const errorData = await response.json();
-        console.error("Backend error:", errorData);
-        return {
-          success: false,
-          error: errorData.detail || "Registration failed",
-        };
-      } catch {
-        console.error(
-          "Failed to parse error response, status:",
-          response.status,
-        );
+        const errorText = await response.text();
+        console.error(`Registration failed with status ${response.status}. Response:`, errorText.substring(0, 200));
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          return {
+            success: false,
+            error: errorData.detail || "Registration failed",
+          };
+        } catch {
+          return {
+            success: false,
+            error: `Error ${response.status}: Registration failed. Check console for details.`,
+          };
+        }
+      } catch (parseError) {
+        console.error("Failed to read error response:", parseError);
         return {
           success: false,
           error: "Registration failed. Please try again.",

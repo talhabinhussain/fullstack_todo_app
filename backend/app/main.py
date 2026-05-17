@@ -22,10 +22,13 @@ allowed_origins = [
     "http://127.0.0.1:3000",
     "http://localhost:3001",
     "http://localhost:3002",
-    "https://*.vercel.app",  # Allow all Vercel deployments
-    "https://*.railway.app",  # Allow Railway deployments if needed
-    "https://vercel.app",  # Additional Vercel pattern
+    "https://vercel.app",
+    "https://fullstack-todo-app-orpin.vercel.app",
 ]
+
+# Regex to match Vercel and Railway subdomains
+# FastAPI's CORSMiddleware requires regex for wildcards when allow_credentials=True
+allow_origin_regex = r"https://.*\.vercel\.app|https://.*\.railway\.app"
 
 if os.getenv("ENVIRONMENT") == "production":
     # Production environment - allow specific origins
@@ -51,7 +54,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
     # Allow credentials to be sent with cross-origin requests
-    allow_origin_regex=None,  # Not using regex for now
+    allow_origin_regex=allow_origin_regex,
     # Expose headers that frontend might need to access
     expose_headers=["Access-Control-Allow-Origin", "Content-Type", "Authorization"],
 )
